@@ -1,6 +1,6 @@
 import unittest
 
-from htmlnode import HTLMNode
+from htmlnode import HTLMNode, LeafNode
 
 class TestHTLMNode(unittest.TestCase):
     def test_props_to_html_empty(self):
@@ -55,3 +55,23 @@ class TestHTLMNode(unittest.TestCase):
         expected_response = f"Tag = None\nValue = None\nChildren = \n\t{children_response}\nProps = "
 
         self.assertEqual(actual_repr, expected_response)
+
+    def test_leaf_to_html_p(self):
+        node = LeafNode("p", "Hello, world!")
+        self.assertEqual(node.to_html(), "<p>Hello, world!</p>")
+
+    def test_leaf_to_html_img(self):
+        node = LeafNode("img", "", {"src": "cat.png", "alt": "A cat"})
+        self.assertEqual(node.to_html(), '<img src="cat.png" alt="A cat" />')
+
+    def test_leaf_to_html_a(self):
+        node = LeafNode("a", "Website", {"href": "https://example.com"})
+        self.assertEqual(node.to_html(), '<a href="https://example.com">Website</a>')
+
+    def test_leaf_to_html_none_value(self):
+        node = LeafNode("p", None)
+        with self.assertRaises(ValueError):
+            node.to_html()
+
+if __name__ == "__main__":
+    unittest.main()

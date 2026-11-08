@@ -30,3 +30,22 @@ class HTLMNode():
             children_string += "None"
 
         return f"Tag = {self.tag}\nValue = {self.value}\nChildren = {children_string}\nProps = {self.props_to_html()}"
+
+class LeafNode(HTLMNode):
+    def __init__(self, tag, value, props = None):
+        super().__init__(tag, value, None, props)
+
+    def to_html(self):
+        if self.value is None:
+            raise ValueError("All leaf nodes must have a value")
+
+        if self.tag is None or self.tag == "":
+            return self.value
+
+        if self.tag == "img":
+            return f"<{self.tag}{self.props_to_html()} />"
+
+        return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
+
+    def __repr__(self):
+        return f"Tag = {self.tag}\nValue = {self.value}\nProps = {self.props_to_html()}"
