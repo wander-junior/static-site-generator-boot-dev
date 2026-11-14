@@ -1,10 +1,15 @@
-from inline_markdown import text_to_textnodes
-from textnode import TextNode, TextType
+from markdown_blocks import markdown_to_blocks
 
 def main():
-    text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+    text = """# This is a heading
 
-    for node in text_to_textnodes(text):
-        print(node)
+This is a paragraph of text. It has some **bold** and _italic_ words inside of it.
+
+- This is the first list item in a list block
+- This is a list item
+- This is another list item"""
+
+    for block in markdown_to_blocks(text):
+        print(f"block: \n{block}")
 
 main()
