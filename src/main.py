@@ -1,10 +1,14 @@
-from markdown_blocks import block_to_block_type 
+from markdown_blocks import markdown_to_html_node 
 
 def main():
-    text = """```
-        Blabla
-    ``` Blabla"""
+    markdown = """
+> This is a
+> blockquote block
 
-    print(block_to_block_type(text))
+this is paragraph text
+
+"""
+
+    print(markdown_to_html_node(markdown).to_html())
 
 main()
