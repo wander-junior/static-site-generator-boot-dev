@@ -52,6 +52,9 @@ def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
 
                 node_text = sections[1]
 
+            if node_text != "":
+                splited_nodes.append(TextNode(node_text, TextType.TEXT))
+
     return splited_nodes
 
 def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
@@ -76,4 +79,18 @@ def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
 
                 node_text = sections[1]
 
+            if node_text != "":
+                splited_nodes.append(TextNode(node_text, TextType.TEXT))
+
     return splited_nodes
+
+def text_to_textnodes(text: str) -> list[TextNode]:
+    list_of_nodes = [TextNode(text, TextType.TEXT)]
+
+    list_of_nodes = split_nodes_delimiter(list_of_nodes, "**", TextType.BOLD)
+    list_of_nodes = split_nodes_delimiter(list_of_nodes, "_", TextType.ITALIC)
+    list_of_nodes = split_nodes_delimiter(list_of_nodes, "`", TextType.CODE)
+    list_of_nodes = split_nodes_image(list_of_nodes)
+    list_of_nodes = split_nodes_link(list_of_nodes)
+
+    return list_of_nodes
