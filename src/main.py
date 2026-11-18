@@ -1,14 +1,33 @@
-from markdown_blocks import markdown_to_html_node 
+import os
+import shutil
+
+def copy_folder(source: str, destination: str, initial: bool = True):
+    if os.path.exists(source) == False:
+        raise ValueError(f"Invalid Source Path: {source}")
+
+    if os.path.exists(destination) == False:
+        os.mkdir(destination)
+    else:
+        if os.path.isfile(destination):
+            raise ValueError(f"Destination {destination} is not a directory")
+        if initial:
+            shutil.rmtree(destination)
+            os.mkdir(destination)
+
+    if os.path.isfile(source):
+        print(f"Pasting {source} into {destination}")
+        shutil.copy(source, destination)
+    else:
+        source_contents = os.listdir(source)
+        for content in source_contents:
+            full_path = os.path.join(source, content)
+            
+            if os.path.isfile(full_path) == False:
+                new_destination = os.path.join(destination, content)
+                copy_folder(full_path, new_destination, False)
+            else:
+                copy_folder(full_path, destination, False)
 
 def main():
-    markdown = """
-> This is a
-> blockquote block
-
-this is paragraph text
-
-"""
-
-    print(markdown_to_html_node(markdown).to_html())
-
+    copy_folder("static", "public")
 main()
