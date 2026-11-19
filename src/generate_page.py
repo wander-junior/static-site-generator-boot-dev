@@ -1,3 +1,5 @@
+import os
+
 from markdown_blocks import markdown_to_html_node
 
 def extract_title(markdown: str) -> str:
@@ -11,6 +13,8 @@ def extract_title(markdown: str) -> str:
 
 def generate_page(from_path: str, template_path: str, dest_path: str):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+
+    os.makedirs(os.path.dirname(dest_path), exist_ok=True)
 
     with (
         open(from_path) as from_file, 
@@ -30,3 +34,19 @@ def generate_page(from_path: str, template_path: str, dest_path: str):
         )
 
         destination_file.write(resulting_html)
+
+def generate_pages_recursive(dir_path_content: str, template_path: str, dest_dir_path: str):
+    if os.path.isfile(dir_path_content):
+        print(f"Chegou aqui assim: {dir_path_content}, {template_path}, {dest_dir_path + "/index.html"}")
+        generate_page(dir_path_content, template_path, dest_dir_path + "/index.html")
+
+    else:
+        dir_contents = os.listdir(dir_path_content)
+        for content in dir_contents:
+            full_path = os.path.join(dir_path_content, content)
+            
+            if os.path.isfile(full_path) == False:
+                new_destination = os.path.join(dest_dir_path, content)
+                generate_pages_recursive(full_path, template_path, new_destination)
+            else:
+                generate_pages_recursive(full_path, template_path, dest_dir_path)        
