@@ -1,6 +1,8 @@
 import os
 import shutil
 
+from generate_page import generate_page
+
 def copy_folder(source: str, destination: str, initial: bool = True):
     if os.path.exists(source) == False:
         raise ValueError(f"Invalid Source Path: {source}")
@@ -30,4 +32,6 @@ def copy_folder(source: str, destination: str, initial: bool = True):
 
 def main():
     copy_folder("static", "public")
+    generate_page("content/index.md", "template.html", "public/index.html")
+
 main()
