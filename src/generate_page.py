@@ -11,7 +11,7 @@ def extract_title(markdown: str) -> str:
 
     raise ValueError("No header in file")
 
-def generate_page(from_path: str, template_path: str, dest_path: str):
+def generate_page(from_path: str, template_path: str, dest_path: str, basepath: str):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
 
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
@@ -31,14 +31,15 @@ def generate_page(from_path: str, template_path: str, dest_path: str):
             template_content
             .replace("{{ Title }}", page_title)
             .replace("{{ Content }}", html_markdown)
+            .replace('href="/', f'href="{basepath}')
+            .replace('src="/', f'src="{basepath}')
         )
 
         destination_file.write(resulting_html)
 
-def generate_pages_recursive(dir_path_content: str, template_path: str, dest_dir_path: str):
+def generate_pages_recursive(dir_path_content: str, template_path: str, dest_dir_path: str, basepath: str):
     if os.path.isfile(dir_path_content):
-        print(f"Chegou aqui assim: {dir_path_content}, {template_path}, {dest_dir_path + "/index.html"}")
-        generate_page(dir_path_content, template_path, dest_dir_path + "/index.html")
+        generate_page(dir_path_content, template_path, dest_dir_path + "/index.html", basepath)
 
     else:
         dir_contents = os.listdir(dir_path_content)
@@ -47,6 +48,6 @@ def generate_pages_recursive(dir_path_content: str, template_path: str, dest_dir
             
             if os.path.isfile(full_path) == False:
                 new_destination = os.path.join(dest_dir_path, content)
-                generate_pages_recursive(full_path, template_path, new_destination)
+                generate_pages_recursive(full_path, template_path, new_destination, basepath)
             else:
-                generate_pages_recursive(full_path, template_path, dest_dir_path)        
+                generate_pages_recursive(full_path, template_path, dest_dir_path, basepath)        
